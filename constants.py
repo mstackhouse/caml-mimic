@@ -3,8 +3,8 @@ EMBEDDING_SIZE = 100
 MAX_LENGTH = 2500
 
 #where you want to save any models you may train
-MODEL_DIR = '/path/to/repo/saved_models/'
+MODEL_DIR = '/home/stack/Documents/caml-mimic/predictions/DRCAML_vaers_full/'
 
-DATA_DIR = '/path/to/repo/mimicdata/'
-MIMIC_3_DIR = '/path/to/repo/mimicdata/mimic3'
-MIMIC_2_DIR = '/path/to/repo/mimicdata/mimic2'
+DATA_DIR = '/home/stack/Documents/w266_project/vaersdata/'
+MIMIC_3_DIR = ''
+MIMIC_2_DIR = ''

@@ -1,6 +1,8 @@
 """
     Main training code. Loads data, builds the model, trains, tests, evaluates, writes outputs, etc.
 """
+import os
+print(os.getcwd())
 import torch
 import torch.optim as optim
 from torch.autograd import Variable

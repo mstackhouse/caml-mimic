@@ -58,6 +58,11 @@ class BaseModel(nn.Module):
         b_batch = []
         for inst in desc_data:
             if len(inst) > 0:
+                # The nested list in an np.array here breaks shit
+                # and I'm not about to go fix it elsewhere - so here's
+                # a shitty work around to get that fucking transpose
+                # 7 lines down to work. Fuck man.
+                inst = np.array([inst[0]])
                 if gpu:
                     lt = Variable(torch.cuda.LongTensor(inst))
                 else:

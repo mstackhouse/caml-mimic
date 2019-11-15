@@ -1,0 +1,77 @@
+usage: training.py [-h] [--embed-file EMBED_FILE] [--cell-type {lstm,gru}]
+                   [--rnn-dim RNN_DIM] [--bidirectional]
+                   [--rnn-layers RNN_LAYERS] [--embed-size EMBED_SIZE]
+                   [--filter-size FILTER_SIZE]
+                   [--num-filter-maps NUM_FILTER_MAPS] [--pool {max,avg}]
+                   [--code-emb CODE_EMB] [--weight-decay WEIGHT_DECAY]
+                   [--lr LR] [--batch-size BATCH_SIZE] [--dropout DROPOUT]
+                   [--lmbda LMBDA] [--dataset {mimic2,mimic3}]
+                   [--test-model TEST_MODEL] [--criterion CRITERION]
+                   [--patience PATIENCE] [--gpu] [--public-model]
+                   [--stack-filters] [--samples] [--quiet]
+                   data_path vocab Y
+                   {cnn_vanilla,rnn,conv_attn,multi_conv_attn,logreg,saved}
+                   n_epochs
+
+train a neural network on some clinical documents
+
+positional arguments:
+  data_path             path to a file containing sorted train data. dev/test
+                        splits assumed to have same name format with 'train'
+                        replaced by 'dev' and 'test'
+  vocab                 path to a file holding vocab word list for
+                        discretizing words
+  Y                     size of label space
+  {cnn_vanilla,rnn,conv_attn,multi_conv_attn,logreg,saved}
+                        model
+  n_epochs              number of epochs to train
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --embed-file EMBED_FILE
+                        path to a file holding pre-trained embeddings
+  --cell-type {lstm,gru}
+                        what kind of RNN to use (default: GRU)
+  --rnn-dim RNN_DIM     size of rnn hidden layer (default: 128)
+  --bidirectional       optional flag for rnn to use a bidirectional model
+  --rnn-layers RNN_LAYERS
+                        number of layers for RNN models (default: 1)
+  --embed-size EMBED_SIZE
+                        size of embedding dimension. (default: 100)
+  --filter-size FILTER_SIZE
+                        size of convolution filter to use. (default: 3) For
+                        multi_conv_attn, give comma separated integers, e.g.
+                        3,4,5
+  --num-filter-maps NUM_FILTER_MAPS
+                        size of conv output (default: 50)
+  --pool {max,avg}      which type of pooling to do (logreg model only)
+  --code-emb CODE_EMB   point to code embeddings to use for parameter
+                        initialization, if applicable
+  --weight-decay WEIGHT_DECAY
+                        coefficient for penalizing l2 norm of model weights
+                        (default: 0)
+  --lr LR               learning rate for Adam optimizer (default=1e-3)
+  --batch-size BATCH_SIZE
+                        size of training batches
+  --dropout DROPOUT     optional specification of dropout (default: 0.5)
+  --lmbda LMBDA         hyperparameter to tradeoff BCE loss and similarity
+                        embedding loss. defaults to 0, which won't create/use
+                        the description embedding module at all.
+  --dataset {mimic2,mimic3}
+                        version of MIMIC in use (default: mimic3)
+  --test-model TEST_MODEL
+                        path to a saved model to load and evaluate
+  --criterion CRITERION
+                        which metric to use for early stopping (default:
+                        f1_micro)
+  --patience PATIENCE   how many epochs to wait for improved criterion metric
+                        before early stopping (default: 3)
+  --gpu                 optional flag to use GPU if available
+  --public-model        optional flag for testing pre-trained models from the
+                        public github
+  --stack-filters       optional flag for multi_conv_attn to instead use
+                        concatenated filter outputs, rather than pooling over
+                        them
+  --samples             optional flag to save samples of good / bad
+                        predictions
+  --quiet               optional flag not to print so much during training

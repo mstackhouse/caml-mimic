@@ -5,6 +5,7 @@ from collections import defaultdict
 import csv
 import math
 import numpy as np
+import pandas as pd
 import sys
 
 from constants import *
@@ -222,40 +223,28 @@ def reformat(code, is_diag):
         code = code[:2] + '.' + code[2:]
     return code
 
-def load_code_descriptions(version='mimic3'):
+def load_code_descriptions(version='vaers'):
     #load description lookup from the appropriate data files
     desc_dict = defaultdict(str)
     if version == 'mimic2':
-        with open('%s/MIMIC_ICD9_mapping' % MIMIC_2_DIR, 'r') as f:
-            r = csv.reader(f)
-            #header
-            next(r)
-            for row in r:
-                desc_dict[str(row[1])] = str(row[2])
+        raise ValueError('Repurposed away from original MIMIC code. ' +\
+                         'reference original repo')
     else:
-        with open("%s/D_ICD_DIAGNOSES.csv" % (DATA_DIR), 'r') as descfile:
-            r = csv.reader(descfile)
-            #header
-            next(r)
-            for row in r:
-                code = row[1]
-                desc = row[-1]
-                desc_dict[reformat(code, True)] = desc
-        with open("%s/D_ICD_PROCEDURES.csv" % (DATA_DIR), 'r') as descfile:
-            r = csv.reader(descfile)
-            #header
-            next(r)
-            for row in r:
-                code = row[1]
-                desc = row[-1]
-                if code not in desc_dict.keys():
-                    desc_dict[reformat(code, False)] = desc
-        with open('%s/ICD9_descriptions' % DATA_DIR, 'r') as labelfile:
-            for i,row in enumerate(labelfile):
-                row = row.rstrip().split()
-                code = row[0]
-                if code not in desc_dict.keys():
-                    desc_dict[code] = ' '.join(row[1:])
+        # Quick fix for our repurposing of this module
+        # Without the MEDDRA dictionary itself we relied on building
+        # our own description dataset - reference supplementalData.py
+        # for the build script. This is our only set of label descriptions
+        # Here we read in that dataset
+        # Additionally, I neglected to strip out line feeds and the web
+        # scrape takes like two hours so I'm just going to use pandas
+        # instead of repurposing the line by line read. 
+        desc = pd.read_csv('%s/supplement_data.txt' % DATA_DIR, sep="\t")
+        def add_to_dict(row):
+            '''Lambda functions don't allow assignments so cheat'''
+            desc_dict[row.label] = row.desc
+            
+        # Add all of the label descriptions to the dict
+        desc.apply(add_to_dict, axis=1)
     return desc_dict
 
 def load_description_vectors(Y, version='mimic3'):
@@ -265,7 +254,7 @@ def load_description_vectors(Y, version='mimic3'):
         data_dir = MIMIC_2_DIR
     else:
         data_dir = MIMIC_3_DIR
-    with open("%s/description_vectors.vocab" % (data_dir), 'r') as vfile:
+    with open("%s/description_vectors.vocab" % DATA_DIR, 'r') as vfile:
         r = csv.reader(vfile, delimiter=" ")
         #header
         next(r)
