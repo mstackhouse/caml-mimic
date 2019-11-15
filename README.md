@@ -1,4 +1,7 @@
-# caml-mimic
+# caml-mimic (Repurposed)
+
+## UC-Berkeley MIDS: 
+### Mike Stackhouse, Chris Ventura - replicating to predict MedDRA PT Terms using the FDA VAERS database
 
 Code for the paper [Explainable Prediction of Medical Codes from Clinical Text](https://arxiv.org/abs/1802.05695).
 
