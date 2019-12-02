@@ -16,6 +16,7 @@ import sys
 import time
 from tqdm import tqdm
 from collections import defaultdict
+import json
 
 from constants import *
 import datasets
@@ -69,8 +70,13 @@ def train_epochs(args, model, optimizer, params, dicts):
     for epoch in range(args.n_epochs):
         #only test on train/test set on very last epoch
         if epoch == 0 and not args.test_model:
-            model_dir = os.path.join(MODEL_DIR, '_'.join([args.model, time.strftime('%b_%d_%H:%M:%S', time.localtime())]))
+            model_dir = os.path.join(MODEL_DIR, '_'.join([args.model, args.modelconf, time.strftime('%b_%d_%H:%M:%S', time.localtime())]))
             os.mkdir(model_dir)
+            print(model_dir)
+            config_file_name = (model_dir + '/parameter_config.txt')
+            print(config_file_name)
+            with open(config_file_name, "w") as f1:
+                f1.write(json.dumps(params))
         elif args.test_model:
             model_dir = os.path.dirname(os.path.abspath(args.test_model))
         metrics_all = one_epoch(model, optimizer, args.Y, epoch, args.n_epochs, args.batch_size, args.data_path,
@@ -344,6 +350,8 @@ if __name__ == "__main__":
                         help="optional flag to save samples of good / bad predictions")
     parser.add_argument("--quiet", dest="quiet", action="store_const", required=False, const=True,
                         help="optional flag not to print so much during training")
+    parser.add_argument("--model-conf",type=str, dest="modelconf", required=False, default=0,
+                        help="corresponds to model training bash script setup (for tracking hyperparameter tuning)")
     args = parser.parse_args()
     command = ' '.join(['python'] + sys.argv)
     args.command = command

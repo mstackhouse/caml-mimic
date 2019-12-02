@@ -14,4 +14,3 @@ conv_attn \
 --embed-file /home/cventura/Documents/MIDS/266_nlp/w266_project/vaersdata/train_device_wiki.embed \
 --embed-size 100 \
 --batch-size 32 \
---model-conf 1

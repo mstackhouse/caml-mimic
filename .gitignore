@@ -15,3 +15,5 @@ share/*
 pip-selfcheck.json
 mimicdata/mimic2/*
 mimicdata/mimic3/*
+dataproc/.ipynb_checkpoints/*
+learn/.ipynb_checkpoints/*
