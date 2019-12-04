@@ -26,6 +26,7 @@ import learn.interpret
 import learn.models as models
 import learn.tools as tools
 
+print('USING UPDATE')
 def main(args):
     start = time.time()
     args, model, optimizer, params, dicts = init(args)

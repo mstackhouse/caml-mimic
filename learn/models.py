@@ -56,13 +56,15 @@ class BaseModel(nn.Module):
         #label description embedding via convolutional layer
         #number of labels is inconsistent across instances, so have to iterate over the batch
         b_batch = []
+        
         for inst in desc_data:
             if len(inst) > 0:
                 # The nested list in an np.array here breaks shit
                 # and I'm not about to go fix it elsewhere - so here's
                 # a shitty work around to get that fucking transpose
-                # 7 lines down to work. Fuck man.
-                inst = np.array([inst[0]])
+                # 7 lines down to work. Fuck man.       
+                if isinstance(desc_data, np.ndarray):
+                    inst = np.array([inst[0]])
                 if gpu:
                     lt = Variable(torch.cuda.LongTensor(inst))
                 else:

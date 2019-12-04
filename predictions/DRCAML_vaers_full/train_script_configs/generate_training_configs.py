@@ -5,7 +5,7 @@ params = {
     "--dropout": [.2, .5, .8],
     "--filter-size": [8, 10, 12],
     "--rnn-dim": [ 256, 512, 1024],
-     "--lambda": [.001, .01, .1],
+     "--lmbda": [.001, .01, .1],
 }
 combinations = list(it.product(*(params[key] for key in params)))
 
@@ -26,4 +26,4 @@ with open("default_train_new_model.sh") as f:
             f1.write('\n')
             for idx, key in enumerate(params.keys()):
                 f1.write(key + ' ' + str(combinations[combo][idx]) + ' \\' + '\n')
-            f1.write("--model-config " + combo_id)
+            f1.write("--model-conf " + combo_id)

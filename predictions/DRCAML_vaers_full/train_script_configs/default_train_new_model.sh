@@ -1,6 +1,6 @@
-python ../../training.py \
-/home/cventura/Documents/MIDS/266_nlp/w266_project/vaersdata/train.csv \
-/home/cventura/Documents/MIDS/266_nlp/w266_project/vocab/vocab.csv \
+python ../../../training.py \
+/home/stack/Documents/w266_project/vaersdata/train.csv \
+/home/stack/Documents/w266_project/vocab/vocab.csv \
 full \
 conv_attn \
 200 \
@@ -11,6 +11,8 @@ conv_attn \
 --criterion prec_at_8 \
 --lr 0.0001 \
 --lmbda 0.01 \
---embed-file /home/cventura/Documents/MIDS/266_nlp/w266_project/vaersdata/train_device_wiki.embed \
+--embed-file /home/stack/Documents/w266_project/vaersdata/train_device_wiki.embed \
 --embed-size 100 \
---batch-size 32 \
+--batch-size 16 \
+--gpu \
+--quiet \

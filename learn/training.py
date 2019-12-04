@@ -27,6 +27,7 @@ import persistence
 import learn.models as models
 import learn.tools as tools
 
+print('USING UPDATE')
 def main(args):
     start = time.time()
     args, model, optimizer, params, dicts = init(args)
@@ -216,8 +217,12 @@ def unseen_code_vecs(model, code_inds, dicts, gpu):
     #wrap it in an array so it's 3d
     desc_embeddings = model.embed_descriptions([vecs], gpu)[0]
     #replace relevant final_layer weights with desc embeddings 
-    model.final.weight.data[code_inds, :] = desc_embeddings.data
-    model.final.bias.data[code_inds] = 0
+    try:
+        model.final.weight.data[code_inds, :] = desc_embeddings.data
+        model.final.bias.data[code_inds] = 0
+    except:
+        print(">>>> LENGTH OF CODE_INDS: ", len(code_inds))
+        sys.exit(1)
 
 def test(model, Y, epoch, data_path, fold, gpu, version, code_inds, dicts, samples, model_dir, testing):
     """
