@@ -125,11 +125,12 @@ class BOWPool(BaseModel):
         x = x.transpose(1, 2)
         if self.pool == 'max':
             import pdb; pdb.set_trace()
-            x = F.max_pool1d(x)
+            x = F.max_pool1d(x, kernel_size=x.size()[2])
         else:
-            x = F.avg_pool1d(x)
-        logits = F.sigmoid(self.final(x))
-        loss = self._get_loss(logits, target, diffs)
+            x = F.avg_pool1d(x, kernel_size=x.size()[2])
+        logits = F.sigmoid(self.final(x.squeeze()))
+        loss = self._get_loss(logits.squeeze(), target.squeeze(), diffs=None)
+        yhat = logits.view(1,-1)
         return yhat, loss, None
 
 class ConvAttnPool(BaseModel):
