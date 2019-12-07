@@ -7,7 +7,6 @@ conv_attn \
 --filter-size 10 \
 --num-filter-maps 50 \
 --dropout 0.2 \
---patience 10 \
 --criterion prec_at_8 \
 --lr 0.0001 \
 --lmbda 0.01 \

@@ -36,6 +36,8 @@ def important_spans(data, output, tgt_codes, pred_codes, s, dicts, filter_size, 
     """
         looks only at the first instance in the batch
     """
+    global failure
+
     ind2w, ind2c, desc_dict = dicts['ind2w'], dicts['ind2c'], dicts['desc']
     for p_code in pred_codes:
         #aww yiss, xor... if false-pos mode, save if it's a wrong prediction, otherwise true-pos mode, so save if it's a true prediction
@@ -57,12 +59,16 @@ def important_spans(data, output, tgt_codes, pred_codes, s, dicts, filter_size, 
             attn = s[0][p_code].data.cpu().numpy()
             #merge overlapping intervals
             imps = attn.argsort()[-10:][::-1]
-            windows = make_windows(imps, filter_size, attn)
+            windows = make_windows(imps, 4, attn)
             kgram_strs = []
             i = 0
             while len(kgram_strs) < 3 and i < len(windows):
                 (start,end), score = windows[i]
-                words = [ind2w[w] if w in ind2w.keys() else 'UNK' for w in data[0][start:end].data.cpu().numpy()]
+                failure = locals()
+                try:
+                    words = [ind2w[w] if w in ind2w.keys() else 'UNK' for w in data[0][start:end].data.cpu().numpy()]
+                except:
+                    break
                 kgram_str = " ".join(words) + ", score: " + str(score)
                 #make sure the span is unique
                 if kgram_str not in kgram_strs:
@@ -72,6 +78,7 @@ def important_spans(data, output, tgt_codes, pred_codes, s, dicts, filter_size, 
                 if spans_file is not None:
                     spans_file.write(kgram_str + "\n")
             spans_file.write('\n')
+    
 
 def make_windows(starts, filter_size, attn):
     starts = sorted(starts)

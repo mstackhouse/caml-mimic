@@ -22,11 +22,10 @@ from constants import *
 import datasets
 import evaluation
 import persistence
-import learn.interpret
+import learn.interpret as interpret
 import learn.models as models
 import learn.tools as tools
 
-print('USING UPDATE')
 def main(args):
     start = time.time()
     args, model, optimizer, params, dicts = init(args)
@@ -270,7 +269,10 @@ def test(model, Y, epoch, data_path, fold, gpu, version, code_inds, dicts, sampl
         losses.append(loss.data[0])
         target_data = target.data.cpu().numpy()
         if get_attn and samples:
-            interpret.save_samples(data, output, target_data, alpha, window_size, epoch, tp_file, fp_file, dicts=dicts)
+            tp_file.write(str(hadm_ids) + "\n")
+            interpret.save_samples(data, output, target_data, alpha, window_size, tp_file, fp_file, dicts)
+
+
 
         #save predictions, target, hadm ids
         yhat_raw.append(output)
